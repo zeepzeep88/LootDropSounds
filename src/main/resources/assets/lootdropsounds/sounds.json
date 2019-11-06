@@ -1,0 +1,7 @@
+{
+	"gem_drop": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.gem_drop",
+		"sounds": [ "lootdropsounds:gem_drop" ]
+	}
+}
