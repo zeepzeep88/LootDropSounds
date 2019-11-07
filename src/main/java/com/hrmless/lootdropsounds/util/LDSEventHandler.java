@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -23,6 +24,24 @@ public class LDSEventHandler {
 	{
 		//System.out.println("Item picked up!");
 		// ModLoader.getMinecraftInstance().thePlayer.addChatMessage("");
+		
+	}
+	
+	@SubscribeEvent
+	public void onItemPick(PlayerInteractEvent event)
+	{
+		ItemStack item = event.getItemStack();
+		String itemString = item.toString();
+		//event.getEntityPlayer().sendMessage(new TextComponentString(itemString));
+		
+		if (Pattern.compile("torch|notGate").matcher(itemString).find()) {
+			event.getEntityPlayer().sendMessage(new TextComponentString("Cannot use torches..."));
+			if (event.isCancelable()) {
+				event.setCanceled(true);
+			}
+		} else {
+			// event allowed
+		}
 		
 	}
 	
@@ -50,6 +69,8 @@ public class LDSEventHandler {
 			return;
 		}
 		
+		//ScalingHealthAPI.getEntityDifficulty(e.entityLiving)
+		
 		//Minecraft.getMinecraft().player.sendChatMessage("LivingDropsEvent");
 		
 		//Minecraft.getMinecraft().player.sendChatMessage(event.getSource().toString());
@@ -62,7 +83,7 @@ public class LDSEventHandler {
 		
 		// if (drop == Items.DIAMOND) world.playSound(...);
 		
-		String gemPattern = "beef";
+		String gemPattern = "diamond|emerald|gem";
 		Pattern gem = Pattern.compile(gemPattern);
 		BlockPos pos = null;
 		
@@ -81,7 +102,7 @@ public class LDSEventHandler {
 			Matcher m = gem.matcher(dropName);
 			if (m.find()) {
 				pos = drop.getPosition();
-				Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Beef!"));
+				//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Beef!"));
 				
 				ResourceLocation location = new ResourceLocation("lootdropsounds", "gem_drop");
 				SoundEvent sEvent = new SoundEvent(location);
