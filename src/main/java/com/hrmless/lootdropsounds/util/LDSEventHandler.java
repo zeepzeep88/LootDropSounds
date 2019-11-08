@@ -1,6 +1,5 @@
 package com.hrmless.lootdropsounds.util;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.entity.item.EntityItem;
@@ -30,8 +29,14 @@ public class LDSEventHandler {
 	// Play sound when gems drop from blocks harvested
 	@SubscribeEvent
 	public void onItemPick(BlockEvent.HarvestDropsEvent event)
-	{
-		// List<ItemStack> drops = event.getDrops();
+	{	
+		for (ItemStack drop : event.getDrops())
+		{
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString(drop.getDisplayName()));
+			if (Pattern.compile("diamond|emerald").matcher(drop.getDisplayName().toLowerCase()).find()) {
+				playSound(event.getWorld(), event.getPos(), "gem_drop");
+			}		
+		}
 	}
 	
 	// Disable placing of vanilla torches or redstone torches
@@ -93,8 +98,20 @@ public class LDSEventHandler {
 		
 		for (EntityItem drop : event.getDrops())
 		{
-			if (Pattern.compile("beef").matcher(drop.getName()).find()) {
+			
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString(drop.getName()));
+			
+			if (Pattern.compile("diamond|emerald").matcher(drop.getName()).find()) {
 				playSound(event.getEntity().world, drop.getPosition(), "gem_drop");
+			}	
+			if (Pattern.compile("shard_common").matcher(drop.getName()).find()) {
+				playSound(event.getEntity().world, drop.getPosition(), "common_drop");
+			}
+			if (Pattern.compile("shard_rare").matcher(drop.getName()).find()) {
+				playSound(event.getEntity().world, drop.getPosition(), "rare_drop");
+			}
+			if (Pattern.compile("shard_epic").matcher(drop.getName()).find()) {
+				playSound(event.getEntity().world, drop.getPosition(), "epic_drop");
 			}
 		}
 		

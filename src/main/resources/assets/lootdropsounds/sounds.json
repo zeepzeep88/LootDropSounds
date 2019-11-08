@@ -3,5 +3,20 @@
 		"category": "master",
 		"subtitle": "lootdropsounds.subtitle.gem_drop",
 		"sounds": [ "lootdropsounds:gem_drop" ]
+	},
+	"common_drop": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.common_drop",
+		"sounds": [ "lootdropsounds:common_drop" ]
+	},
+	"rare_drop": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.rare_drop",
+		"sounds": [ "lootdropsounds:rare_drop" ]
+	},
+	"epic_drop": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.epic_drop",
+		"sounds": [ "lootdropsounds:epic_drop" ]
 	}
 }
