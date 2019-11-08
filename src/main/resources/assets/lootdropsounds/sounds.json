@@ -18,5 +18,25 @@
 		"category": "master",
 		"subtitle": "lootdropsounds.subtitle.epic_drop",
 		"sounds": [ "lootdropsounds:epic_drop" ]
+	},
+	"alert": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.alert",
+		"sounds": [ "lootdropsounds:alert" ]
+	},
+	"stress": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.stress",
+		"sounds": [ "lootdropsounds:stress" ]
+	},
+	"heartbeat": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.heartbeat",
+		"sounds": [ "lootdropsounds:heartbeat" ]
+	},
+	"deep_beat": {
+		"category": "master",
+		"subtitle": "lootdropsounds.subtitle.deep_beat",
+		"sounds": [ "lootdropsounds:deep_beat" ]
 	}
 }
