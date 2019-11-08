@@ -1,6 +1,5 @@
 package com.hrmless.lootdropsounds.util;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,10 +9,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -27,6 +27,14 @@ public class LDSEventHandler {
 		
 	}
 	
+	// Play sound when gems drop from blocks harvested
+	@SubscribeEvent
+	public void onItemPick(BlockEvent.HarvestDropsEvent event)
+	{
+		// List<ItemStack> drops = event.getDrops();
+	}
+	
+	// Disable placing of vanilla torches or redstone torches
 	@SubscribeEvent
 	public void onItemPick(PlayerInteractEvent event)
 	{
@@ -35,7 +43,7 @@ public class LDSEventHandler {
 		//event.getEntityPlayer().sendMessage(new TextComponentString(itemString));
 		
 		if (Pattern.compile("torch|notGate").matcher(itemString).find()) {
-			event.getEntityPlayer().sendMessage(new TextComponentString("Cannot use torches..."));
+			//event.getEntityPlayer().sendMessage(new TextComponentString("Cannot use torches..."));
 			if (event.isCancelable()) {
 				event.setCanceled(true);
 			}
@@ -45,6 +53,22 @@ public class LDSEventHandler {
 		
 	}
 	
+	public void playSound(World world, BlockPos pos, String sound)
+	{
+		//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Playing sound: " + sound));
+		ResourceLocation location = new ResourceLocation("lootdropsounds", sound);
+		SoundEvent sEvent = new SoundEvent(location);
+		
+		world.playSound(
+				null
+				, pos
+				, sEvent
+				, SoundCategory.BLOCKS
+				, 1.0F
+				, 1.2F / (world.rand.nextFloat() * 0.2f + 0.9f));
+	}
+	
+	// Play sound when gems drop from mob deaths
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onItemPick(LivingDropsEvent event)
 	{
@@ -54,70 +78,23 @@ public class LDSEventHandler {
 		try {
 			String source = event.getSource().getTrueSource().toString();
 			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("LivingDropsEvent source: " + source));
-		
-			String sourcePattern = "EntityPlayer";
-			Pattern sourceCheck = Pattern.compile(sourcePattern);
-			Matcher matchSource = sourceCheck.matcher(source);
-			isPlayerKill = matchSource.find();
+			isPlayerKill = Pattern.compile("EntityPlayer").matcher(source).find();
 			
 		} catch(Exception e) {
-			return;
 			// source was probably not a player
+			return;
 		}
 		
 		if (!isPlayerKill) {
 			return;
 		}
-		
-		//ScalingHealthAPI.getEntityDifficulty(e.entityLiving)
-		
-		//Minecraft.getMinecraft().player.sendChatMessage("LivingDropsEvent");
-		
-		//Minecraft.getMinecraft().player.sendChatMessage(event.getSource().toString());
-		
-		//Minecraft.getMinecraft().player.sendChatMessage(event.getDrops().toString());
-		
-		//System.out.println("Drops!");
-		//System.out.println(event.getSource());
-		//System.out.println(event.getDrops());
-		
-		// if (drop == Items.DIAMOND) world.playSound(...);
-		
-		String gemPattern = "diamond|emerald|gem";
-		Pattern gem = Pattern.compile(gemPattern);
-		BlockPos pos = null;
-		
-		List<EntityItem> drops = event.getDrops();
-		
+
 		//Minecraft.getMinecraft().player.sendMessage(new TextComponentString(drops.size() + " drops"));
 		
-		for (EntityItem drop : drops)
+		for (EntityItem drop : event.getDrops())
 		{
-			String dropName = drop.getName();
-			//System.out.println(dropName);
-			
-			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("A drop! --> " + dropName));
-			
-			//Minecraft.getMinecraft().player.sendChatMessage(dropName);
-			Matcher m = gem.matcher(dropName);
-			if (m.find()) {
-				pos = drop.getPosition();
-				//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Beef!"));
-				
-				ResourceLocation location = new ResourceLocation("lootdropsounds", "gem_drop");
-				SoundEvent sEvent = new SoundEvent(location);
-				
-				event.getEntity().world.playSound(
-						null
-						, pos
-						, sEvent
-						, SoundCategory.BLOCKS
-						, 1.0F
-						, 1.2F / (event.getEntity().world.rand.nextFloat() * 0.2f + 0.9f));
-				
-			} else {
-				//Minecraft.getMinecraft().player.sendChatMessage("no match, no sound");
-				//System.out.println("no match, no sound");
+			if (Pattern.compile("beef").matcher(drop.getName()).find()) {
+				playSound(event.getEntity().world, drop.getPosition(), "gem_drop");
 			}
 		}
 		
