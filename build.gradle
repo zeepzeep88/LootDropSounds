@@ -10,6 +10,12 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
+repositories {
+	flatDir {
+		dirs "libs"
+	}
+}
+
 version = "1.0"
 group = "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "modid"
@@ -46,10 +52,11 @@ dependencies {
     //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
     // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
+    // except that these dependencies get redmapped to your current MCP mappings
     //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    deobfProvided 'net.silentchaos512.scalinghealth'
+	deobfCompile 'notused:ScalingHealth-1.12.2:1.3.42+147'
+	
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
